@@ -1,5 +1,5 @@
 import pygame as pg
-from .utils import player_img, blockGroup
+from .utils import player_img, collidingGroup
 
 
 class Player(pg.sprite.Sprite):
@@ -9,8 +9,8 @@ class Player(pg.sprite.Sprite):
         self.rect = pg.rect.Rect(52, 52, 40, 40)  
         self.bomb_limit = 50 
         self.dir, self.mov = 1, 10
-        self.pos = [[0, 34, 17], [102, 136, 119],
-                    [51, 85, 68], [153, 187, 170]]
+        self.UVmap = [[0, 34, 17], [102, 136, 119],
+                     [51, 85, 68], [153, 187, 170]]
 
 
     def update(self):
@@ -25,12 +25,12 @@ class Player(pg.sprite.Sprite):
         d = keys[pg.K_d]
 
         if w and self.willCollide(0, -5):
-            self.dir = 0
             if not (a or d):
+                self.dir = 0
                 self.mov += 3
         if s and self.willCollide(0, 5):
-            self.dir = 1
             if not (a or d):
+                self.dir = 1
                 self.mov -= 3
         if  a and self.willCollide(-5, 0):
             self.dir = 2
@@ -42,7 +42,7 @@ class Player(pg.sprite.Sprite):
 
 
     def animation(self):
-        img_rect = [self.pos[self.dir][self.mov//10], 0 , 16, 24]
+        img_rect = [self.UVmap[self.dir][self.mov//10], 0 , 16, 24]
         self.image = pg.Surface.subsurface(player_img, img_rect)
         self.image = pg.transform.scale(self.image, [40, 40])
     
@@ -52,7 +52,7 @@ class Player(pg.sprite.Sprite):
         self.rect.x += x
         self.rect.y += y
 
-        if pg.sprite.spritecollide(self, blockGroup, False):
+        if pg.sprite.spritecollide(self, collidingGroup, False):
             self.rect.center = temp
         return True
 
