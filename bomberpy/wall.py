@@ -25,5 +25,3 @@ class Wall(pg.sprite.Sprite):
             self.kill()
         
         
-        
-

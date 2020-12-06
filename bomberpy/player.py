@@ -8,10 +8,10 @@ class Player(pg.sprite.Sprite):
         self.image = pg.Surface([40, 40])
         self.rect = pg.rect.Rect(52, 52, 40, 40)  
         self.bomb_limit = 50 
+        self.vel = 4
         self.dir, self.mov = 1, 10
         self.UVmap = [[0, 34, 17], [102, 136, 119],
                      [51, 85, 68], [153, 187, 170]]
-
 
     def update(self):
         self.animation()
@@ -24,29 +24,27 @@ class Player(pg.sprite.Sprite):
         a = keys[pg.K_a]
         d = keys[pg.K_d]
 
-        if w and self.willCollide(0, -5):
+        if w and self.willCollide(0, -self.vel):
             if not (a or d):
                 self.dir = 0
                 self.mov += 3
-        if s and self.willCollide(0, 5):
+        if s and self.willCollide(0, self.vel):
             if not (a or d):
                 self.dir = 1
                 self.mov -= 3
-        if  a and self.willCollide(-5, 0):
+        if  a and self.willCollide(-self.vel, 0):
             self.dir = 2
             self.mov -= 3
-        if d and self.willCollide(5, 0):
+        if d and self.willCollide(self.vel, 0):
             self.dir = 3
             self.mov += 3
         self.mov %= 30 
-
 
     def animation(self):
         img_rect = [self.UVmap[self.dir][self.mov//10], 0 , 16, 24]
         self.image = pg.Surface.subsurface(player_img, img_rect)
         self.image = pg.transform.scale(self.image, [40, 40])
     
-
     def willCollide(self, x, y):
         temp = self.rect.center
         self.rect.x += x
