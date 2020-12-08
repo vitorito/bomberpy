@@ -40,7 +40,7 @@ class Game(pg.sprite.Sprite):
             for c, char in enumerate(line):
                 x, y = c * 50, l * 50
                 if char == 0:
-                    bl = Block(collidingGroup, gameObjectGroup)
+                    bl = Block(blockGroup, collidingGroup, gameObjectGroup)
                     bl.rect.x, bl.rect.y = x, y
                 elif char == 3 or (char == 1 and random() <= 0.6):
                     wl = Wall(wallGroup, gameObjectGroup, collidingGroup)
