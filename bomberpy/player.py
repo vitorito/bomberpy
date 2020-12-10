@@ -19,23 +19,23 @@ class Player(pg.sprite.Sprite):
 
     def movement(self):
         keys = pg.key.get_pressed()
-        w = keys[pg.K_w]
-        s = keys[pg.K_s]
-        a = keys[pg.K_a]
-        d = keys[pg.K_d]
 
-        if w and self.willCollide(0, -self.vel):
-            if not (a or d):
+        if keys[pg.K_w]:
+            self.willCollide(0, -self.vel)
+            if not (keys[pg.K_a] or keys[pg.K_d]):
                 self.dir = 0
                 self.mov += 3
-        if s and self.willCollide(0, self.vel):
-            if not (a or d):
+        if keys[pg.K_s]:
+            self.willCollide(0, self.vel)
+            if not (keys[pg.K_a] or keys[pg.K_d]):
                 self.dir = 1
                 self.mov -= 3
-        if  a and self.willCollide(-self.vel, 0):
+        if  keys[pg.K_a]:
+            self.willCollide(-self.vel, 0)
             self.dir = 2
             self.mov -= 3
-        if d and self.willCollide(self.vel, 0):
+        if keys[pg.K_d]:
+            self.willCollide(self.vel, 0)
             self.dir = 3
             self.mov += 3
         self.mov %= 30 
@@ -51,7 +51,6 @@ class Player(pg.sprite.Sprite):
         self.rect.y += y
 
         if pg.sprite.spritecollide(self, collidingGroup, False):
-            self.rect.center = temp
-        return True
+            self.rect.center = temp  
 
     

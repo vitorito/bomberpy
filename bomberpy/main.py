@@ -8,7 +8,7 @@ display = pg.display.set_mode([850, 550])
 pg.display.set_caption("Bomberpy") 
 
 from .menu import Menu
-from .game import Game, gameObjectGroup, pl
+from .game import Game, gameObjectGroup
 
 menuGroup = pg.sprite.Group()   
 gameGroup = pg.sprite.Group()

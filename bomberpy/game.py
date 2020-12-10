@@ -6,6 +6,7 @@ from .player import Player
 from .bomb import Bomb
 from .block import Block
 from .wall import Wall
+from .enemy import Enemy
 from .utils import *
 
 pl = Player(gameObjectGroup)  
@@ -38,11 +39,15 @@ class Game(pg.sprite.Sprite):
     def generateMap(self):
         for l, line in enumerate(MATRIZ):
             for c, char in enumerate(line):
-                x, y = c * 50, l * 50
+                x, y = (c * 50) + 25, (l * 50) + 25
                 if char == 0:
                     bl = Block(blockGroup, collidingGroup, gameObjectGroup)
-                    bl.rect.x, bl.rect.y = x, y
+                    bl.rect.center = x, y
                 elif char == 3 or (char == 1 and random() <= 0.6):
-                    wl = Wall(wallGroup, gameObjectGroup, collidingGroup)
-                    wl.rect.x, wl.rect.y = x, y
+                    wl = Wall(wallGroup, collidingGroup, gameObjectGroup)
+                    wl.rect.center = x, y
                     MATRIZ[l][c] = 3
+                elif char == 4:
+                    en = Enemy(enemyGroup, gameObjectGroup)
+                    en.rect.center = x, y
+                    en.get_player(pl)
