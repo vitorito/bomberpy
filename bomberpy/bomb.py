@@ -11,7 +11,7 @@ class Bomb(pg.sprite.Sprite):
         self.image = pg.Surface.subsurface(bomb_img, [0, 0, 0, 0])
         self.rect = pg.rect.Rect([0, 0, 40, 40]) 
         self.start_time = time()  # pega o momento em que a bomba foi colocada
-        self.range = 3
+        self.range = 1
         self.UVmap = [0, 16, 32, 16]
 
     def update(self):

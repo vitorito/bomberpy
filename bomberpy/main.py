@@ -7,7 +7,7 @@ pg.init()
 display = pg.display.set_mode([850, 550]) 
 
 from .menu import Menu
-from .game import Game, gameObjectGroup, playerGroup
+from .game import Game, gameObjectGroup, playerGroup, enemyGroup
 from .utils import icon
 
 pg.display.set_caption("Bomberpy")
@@ -27,9 +27,11 @@ def run():
         if gm.running: 
             gameObjectGroup.update()
             gameGroup.update()
+            enemyGroup.update()
             playerGroup.update()
             gameGroup.draw(display)
             gameObjectGroup.draw(display)
+            enemyGroup.draw(display)
             playerGroup.draw(display)
         else:
             for event in pg.event.get():  

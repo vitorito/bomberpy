@@ -10,6 +10,7 @@ class Player(pg.sprite.Sprite):
         self.rect = pg.rect.Rect(52, 52, 40, 40)  
         self.dead = False
         self.bomb_limit = 1
+        self.explosion_range = 1
         self.vel = 3
         self.dir = 1
         self.mov = 10

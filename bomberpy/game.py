@@ -28,9 +28,10 @@ class Game(pg.sprite.Sprite):
                 if event.key == pg.K_ESCAPE:
                     self.running = False
                 if event.key == pg.K_SPACE and not pg.sprite.spritecollide(pl, bombGroup, False): 
-                    if pl.bomb_limit >= len(bombGroup):  # limita as bombas
+                    if pl.bomb_limit > len(bombGroup):  # limita as bombas
                         newBomb = Bomb(gameObjectGroup, bombGroup) 
                         newBomb.calcPos(pl.rect.center)
+                        newBomb.range = pl.explosion_range
                         pl.last_bomb = newBomb
                         pl.over_last_bomb = True
                     
@@ -50,5 +51,5 @@ class Game(pg.sprite.Sprite):
                     wl.rect.center = x, y
                     MATRIZ[l][c] = 3
                 elif char == 4:
-                    en = Enemy(enemyGroup, gameObjectGroup)
+                    en = Enemy(enemyGroup)
                     en.rect.center = x, y
