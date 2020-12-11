@@ -9,8 +9,7 @@ ng_bottom = NewGameBottom()
 class Menu(pg.sprite.Sprite):
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = mainMenu_img
-        self.image = pg.transform.scale(self.image, (HEIGHT, WIDTH))
+        self.image = pg.transform.scale(mainMenu_img, (HEIGHT, WIDTH))
         self.rect = self.image.get_rect()
         self.button = None
     

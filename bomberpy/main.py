@@ -1,32 +1,38 @@
-# VERSION = 0.0.1 
+# VERSION = 0.0.2.dev1
 
 import pygame as pg
 
 pg.init()
 
 display = pg.display.set_mode([850, 550]) 
-pg.display.set_caption("Bomberpy") 
 
 from .menu import Menu
-from .game import Game, gameObjectGroup, blockGroup
+from .game import Game, gameObjectGroup, playerGroup, enemyGroup
+from .utils import icon
 
-menuGroup = pg.sprite.Group()  
-gameGroup = pg.sprite.Group()  
-
-mn = Menu(menuGroup)  
-gm = Game(gameGroup)
-
-clock = pg.time.Clock()
+pg.display.set_caption("Bomberpy")
+pg.display.set_icon(icon)
 
 def run():
+    menuGroup = pg.sprite.Group()   
+    gameGroup = pg.sprite.Group()
+
+    mn = Menu(menuGroup)  
+    gm = Game(gameGroup)
+
+    clock = pg.time.Clock()
+
     while True:
         clock.tick(30) 
         if gm.running: 
-            gameGroup.update()
             gameObjectGroup.update()
+            gameGroup.update()
+            enemyGroup.update()
+            playerGroup.update()
             gameGroup.draw(display)
             gameObjectGroup.draw(display)
-            blockGroup.draw(display)
+            enemyGroup.draw(display)
+            playerGroup.draw(display)
         else:
             for event in pg.event.get():  
                 if event.type == pg.QUIT: 
