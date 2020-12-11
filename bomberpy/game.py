@@ -52,4 +52,3 @@ class Game(pg.sprite.Sprite):
                 elif char == 4:
                     en = Enemy(enemyGroup, gameObjectGroup)
                     en.rect.center = x, y
-                    en.get_player(pl)

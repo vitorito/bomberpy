@@ -11,6 +11,7 @@ class Explosion(pg.sprite.Sprite):
         self.start_time = time()
         self.rotate = 0
         self.subrect = [0, 0, 48, 48]
+        self.sub = False
         
     def update(self):
         self.timer = time() - self.start_time
@@ -23,6 +24,8 @@ class Explosion(pg.sprite.Sprite):
             self.image = explosion_img.subsurface(self.subrect)
             self.image = pg.transform.scale(self.image, [50, 50])
             self.image = pg.transform.rotate(self.image, self.rotate)
+            if self.sub:
+                self.rect = self.image.get_rect()
         else:
             self.kill()
         
@@ -39,6 +42,7 @@ class Explosion(pg.sprite.Sprite):
         exp = self.objExplosion([x, y, 50, 50])
         exp.subrect = subrect
         exp.rotate = rotate
+        exp.sub = True
 
         wall = pg.sprite.spritecollide(exp, wallGroup, False)
         block = pg.sprite.spritecollide(exp, blockGroup, False)

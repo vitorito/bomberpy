@@ -1,5 +1,4 @@
 import pygame as pg
-from time import time
 from .utils import player_img, deathPlayer_img
 from .utils import wallGroup, bombGroup, blockGroup, explosionGroup, enemyGroup
 

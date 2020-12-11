@@ -1,6 +1,6 @@
 import pygame as pg 
-import random
-from time import time, sleep
+from random import choice as _choice
+from time import time as _time
 from .utils import enemy_img, MATRIZ, wallGroup, blockGroup, bombGroup
 
 class Enemy(pg.sprite.Sprite):
@@ -13,18 +13,29 @@ class Enemy(pg.sprite.Sprite):
         self.vel_x = 0
         self.vel_y = 0
         self.mov = 0
-        self.direction = random.choice(['up', 'bottom', 'left', 'right'])
-        self.prev_pos = self.calc_pos()
+        self.direction = _choice(['up', 'bottom', 'left', 'right'])
+        self.target = None
 
     def update(self):
         if not self.dead:
             self.animation()
             self.move()
+        else:
+            self.timer = _time() - self.start_time
+            self.deathAnimation()
   
     def animation(self):
         aux = int(self.mov) * 16
         frame = enemy_img.subsurface([aux, 0, 16, 16])
-        self.image = pg.transform.scale(frame, [50, 50])
+        self.image = pg.transform.scale(frame, [45, 45])
+
+    def deathAnimaton(self):
+        aux = 96 +  1* 16
+        if aux <= 160:
+            frame = enemy_img.subsurface([aux, 0, 16, 16])
+            self.image = pg.transform.scale(frame, [45, 45])
+        else:
+            self.kill()
 
     def collide(self, x=0, y=0, moving=False):
         temp = self.rect.center
@@ -43,26 +54,30 @@ class Enemy(pg.sprite.Sprite):
     def cur_dir_collide(self):
         self.directions = {'up':(0,-2), 'bottom':(0,2), 'left':(-2,0), 'right':(2,0)}
         x, y = self.directions[self.direction]
-
         return self.collide(x=x, y=y)
         
-
     def chooseDirection(self):
         if self.cur_dir_collide():
             self.directions.pop(self.direction)
-        return random.choice(list(self.directions.keys()))
+        self.direction = _choice(list(self.directions.keys()))
 
-    def calc_pos(self):
-        x = self.rect.x // 50
-        y = self.rect.y // 50
-        return x, y
+    def calcTarget(self):
+        x, y = self.rect.center
+
+        if self.direction == 'up':
+            self.target = x, y - 50
+        if self.direction == 'bottom':
+            self.target = x, y + 50
+        if self.direction == 'left':
+            self.target = x - 50, y    
+        if self.direction == 'right':
+            self.target = x + 50, y  
 
     def move(self):
-        cur_pos = self.calc_pos() 
-        if cur_pos != self.prev_pos or self.cur_dir_collide():
-            self.direction = self.chooseDirection()
-            self.prev_pos = cur_pos
-
+        if self.rect.center == self.target or self.cur_dir_collide():
+            self.chooseDirection()
+            self.calcTarget()
+            
         if self.direction == 'up':
             self.vel_x = 0
             self.vel_y = -2
@@ -78,6 +93,4 @@ class Enemy(pg.sprite.Sprite):
 
         self.collide(x=self.vel_x, y=self.vel_y, moving=True)
         self.mov = (self.mov + 0.1) % 6
-
-    def get_player(self, player):
-        self.pl = player
+        
