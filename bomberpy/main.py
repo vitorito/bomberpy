@@ -5,20 +5,23 @@ import pygame as pg
 pg.init()
 
 display = pg.display.set_mode([850, 550]) 
-pg.display.set_caption("Bomberpy") 
 
 from .menu import Menu
 from .game import Game, gameObjectGroup, playerGroup
+from .utils import icon
 
-menuGroup = pg.sprite.Group()   
-gameGroup = pg.sprite.Group()
-
-mn = Menu(menuGroup)  
-gm = Game(gameGroup)
-
-clock = pg.time.Clock()
+pg.display.set_caption("Bomberpy")
+pg.display.set_icon(icon)
 
 def run():
+    menuGroup = pg.sprite.Group()   
+    gameGroup = pg.sprite.Group()
+
+    mn = Menu(menuGroup)  
+    gm = Game(gameGroup)
+
+    clock = pg.time.Clock()
+
     while True:
         clock.tick(30) 
         if gm.running: 

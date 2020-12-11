@@ -1,7 +1,8 @@
 import pygame as pg 
 from random import choice as _choice
 from time import time as _time
-from .utils import enemy_img, MATRIZ, wallGroup, blockGroup, bombGroup
+from .utils import enemy_img, MATRIZ
+from .utils import wallGroup, blockGroup, bombGroup, explosionGroup
 
 class Enemy(pg.sprite.Sprite):
     def __init__(self, *groups):
@@ -20,6 +21,7 @@ class Enemy(pg.sprite.Sprite):
         if not self.dead:
             self.animation()
             self.move()
+            self.checkDeath()
         else:
             self.timer = _time() - self.start_time
             self.deathAnimation()
@@ -29,8 +31,8 @@ class Enemy(pg.sprite.Sprite):
         frame = enemy_img.subsurface([aux, 0, 16, 16])
         self.image = pg.transform.scale(frame, [45, 45])
 
-    def deathAnimaton(self):
-        aux = 96 +  1* 16
+    def deathAnimation(self):
+        aux = 96 + int((self.timer - int(self.timer)) * 10 // 1.5) * 16
         if aux <= 160:
             frame = enemy_img.subsurface([aux, 0, 16, 16])
             self.image = pg.transform.scale(frame, [45, 45])
@@ -93,4 +95,8 @@ class Enemy(pg.sprite.Sprite):
 
         self.collide(x=self.vel_x, y=self.vel_y, moving=True)
         self.mov = (self.mov + 0.1) % 6
-        
+    
+    def checkDeath(self):
+        if pg.sprite.spritecollide(self, explosionGroup, False):
+            self.dead = True
+            self.start_time = _time()

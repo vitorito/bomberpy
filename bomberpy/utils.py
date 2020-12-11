@@ -14,6 +14,7 @@ enemyGroup = pg.sprite.Group()
 playerGroup = pg.sprite.Group()
 
 #images
+icon = pg.image.load(CAMINHO + "/images/icon.png")
 player_img = pg.image.load(CAMINHO + "/images/player.png").convert_alpha()
 deathPlayer_img = pg.image.load(CAMINHO + "/images/deathplayer.png").convert_alpha()
 enemy_img = pg.image.load(CAMINHO + "/images/enemy.png").convert_alpha()
