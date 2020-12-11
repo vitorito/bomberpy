@@ -9,7 +9,7 @@ from .wall import Wall
 from .enemy import Enemy
 from .utils import *
 
-pl = Player(gameObjectGroup)  
+pl = Player(playerGroup)  
 
 class Game(pg.sprite.Sprite):
     """ Esta classe controla somente a execução da partida, não a do programa em si"""
@@ -31,6 +31,8 @@ class Game(pg.sprite.Sprite):
                     if pl.bomb_limit >= len(bombGroup):  # limita as bombas
                         newBomb = Bomb(gameObjectGroup, bombGroup) 
                         newBomb.calcPos(pl.rect.center)
+                        pl.last_bomb = newBomb
+                        pl.over_last_bomb = True
                     
             if event.type == pg.KEYUP:
                 if event.key in [pg.K_w, pg.K_s, pg.K_a, pg.K_d]:
@@ -41,10 +43,10 @@ class Game(pg.sprite.Sprite):
             for c, char in enumerate(line):
                 x, y = (c * 50) + 25, (l * 50) + 25
                 if char == 0:
-                    bl = Block(blockGroup, collidingGroup, gameObjectGroup)
+                    bl = Block(blockGroup, gameObjectGroup)
                     bl.rect.center = x, y
                 elif char == 3 or (char == 1 and random() <= 0.6):
-                    wl = Wall(wallGroup, collidingGroup, gameObjectGroup)
+                    wl = Wall(wallGroup, gameObjectGroup)
                     wl.rect.center = x, y
                     MATRIZ[l][c] = 3
                 elif char == 4:

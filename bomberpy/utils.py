@@ -11,9 +11,11 @@ blockGroup = pg.sprite.Group()
 bombGroup = pg.sprite.Group() 
 wallGroup = pg.sprite.Group()
 enemyGroup = pg.sprite.Group()
+playerGroup = pg.sprite.Group()
 
 #images
 player_img = pg.image.load(CAMINHO + "/images/player.png").convert_alpha()
+deathPlayer_img = pg.image.load(CAMINHO + "/images/deathplayer.png").convert_alpha()
 enemy_img = pg.image.load(CAMINHO + "/images/enemy.png").convert_alpha()
 bomb_img = pg.image.load(CAMINHO + "/images/bombsprite.png").convert_alpha()
 newGame_img = pg.image.load(CAMINHO + "/images/newgame.png").convert_alpha()
