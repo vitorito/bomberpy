@@ -8,24 +8,22 @@ class Bomb(pg.sprite.Sprite):
     """ Cria os objetos de bomba, controla a sua explosão e animação"""
     def __init__(self, *groups):
         super().__init__(*groups)
-        self.image = pg.Surface.subsurface(bomb_img, [0, 0, 0, 0])
-        self.rect = pg.rect.Rect([0, 0, 40, 40]) 
-        self.start_time = time()  # pega o momento em que a bomba foi colocada
+        self.image = bomb_img.subsurface([0, 0, 0, 0])
+        self.rect = pg.rect.Rect([0, 0, 40, 50])
+        self.start_time = pg.time.get_ticks()
         self.range = 1
-        self.UVmap = [0, 16, 32, 16]
 
     def update(self):
-        self.timer = time() - self.start_time
-        if self.timer >= 3:
+        self.timer = pg.time.get_ticks() - self.start_time
+        if self.timer >= 3500:
             self.explosion()
         else:
             self.animation()
             
     def animation(self):
-        aux = int((self.timer - int(self.timer)) * 10 // 2 % 4)
-        img_rect = [self.UVmap[aux], 0 , 16, 16]
-        self.image = pg.Surface.subsurface(bomb_img, img_rect)
-        self.image = pg.transform.scale(self.image, [40, 40])
+        aux = (self.timer // 160) % 4
+        self.image = pg.Surface.subsurface(bomb_img, [aux * 80, 0 , 80, 120])
+        self.image = pg.transform.scale(self.image, [40, 50])
         
     def explosion(self):
         exp = Explosion(explosionGroup, gameObjectGroup)
@@ -39,18 +37,4 @@ class Bomb(pg.sprite.Sprite):
         x = (pos[0] // 50) * 50 + 25
         y = (pos[1] // 50) * 50 + 25
         self.rect.center = x, y
-
-
-
-
-    
-
-
-        
-
-
-    
-
-        
-        
 

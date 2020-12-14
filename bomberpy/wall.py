@@ -31,7 +31,7 @@ class Wall(pg.sprite.Sprite):
         self.start_time = _time()
     
     def chooseBooster(self):
-        probs = _randint(0, 10)
+        probs = _randint(0, 4)
         if probs != 0:
             return
         bst = _choice(['add_bomb', 'add_explosion_range', 'add_speed'])

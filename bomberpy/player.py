@@ -11,7 +11,7 @@ class Player(pg.sprite.Sprite):
         self.dead = False
         self.bomb_limit = 1
         self.explosion_range = 1
-        self.vel = 3
+        self.vel = 2.5
         self.dir = 1
         self.mov = 10
         self.UVmap = [
@@ -26,7 +26,6 @@ class Player(pg.sprite.Sprite):
             self.movement()
             self.checkDeath()
         else:
-            self.aux = (self.aux + 2.5) % 91
             self.deathAnimation()
 
     def movement(self):
@@ -58,7 +57,7 @@ class Player(pg.sprite.Sprite):
         self.image = pg.transform.scale(frame, [40, 40])
 
     def deathAnimation(self):
-        aux = int(self.aux // 10)
+        aux = (pg.time.get_ticks() // 220) % 10
         if aux < 9:
             img_rect = [self.deathUVmap[aux], 0, 16, 25]
             if aux > 3:

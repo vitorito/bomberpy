@@ -1,5 +1,5 @@
 # Bomberpy
-O clássico Bomberman feito em python
+O clássico Bomberman feito em python.
 
 ## Instalação
 ```

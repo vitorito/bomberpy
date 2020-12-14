@@ -8,8 +8,7 @@ from .block import Block
 from .wall import Wall
 from .enemy import Enemy
 from .utils import *
-
-pl = Player(playerGroup)  
+ 
 
 class Game(pg.sprite.Sprite):
     """ Esta classe controla somente a execução da partida, não a do programa em si"""
@@ -19,6 +18,7 @@ class Game(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.running = False
         self.generateMap()
+        self.pl = Player(playerGroup)
 
     def update(self):
         for event in pg.event.get(): 
@@ -27,18 +27,18 @@ class Game(pg.sprite.Sprite):
             if event.type == pg.KEYDOWN: 
                 if event.key == pg.K_ESCAPE:
                     self.running = False
-                if event.key == pg.K_SPACE and not pg.sprite.spritecollide(pl, bombGroup, False): 
-                    if pl.bomb_limit > len(bombGroup):  # limita as bombas
+                if event.key == pg.K_SPACE and not pg.sprite.spritecollide(self.pl, bombGroup, False): 
+                    if self.pl.bomb_limit > len(bombGroup):  # limita as bombas
                         newBomb = Bomb(gameObjectGroup, bombGroup) 
-                        newBomb.calcPos(pl.rect.center)
-                        newBomb.range = pl.explosion_range
-                        pl.last_bomb = newBomb
-                        pl.over_last_bomb = True
+                        newBomb.calcPos(self.pl.rect.center)
+                        newBomb.range = self.pl.bomb_limit
+                        self.pl.last_bomb = newBomb
+                        self.pl.over_last_bomb = True
                     
             if event.type == pg.KEYUP:
                 if event.key in [pg.K_w, pg.K_s, pg.K_a, pg.K_d]:
-                    pl.mov = 10
-
+                    self.pl.mov = 10
+    
     def generateMap(self):
         for l, line in enumerate(MATRIZ):
             for c, char in enumerate(line):
