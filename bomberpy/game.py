@@ -17,8 +17,10 @@ class Game(pg.sprite.Sprite):
         self.image = pg.transform.scale(background_img, (HEIGHT, WIDTH)).convert()
         self.rect = self.image.get_rect()
         self.running = False
-        self.generateMap()
+        
         self.pl = Player(playerGroup)
+
+        self.generateMap()
 
     def update(self):
         for event in pg.event.get(): 
@@ -31,7 +33,7 @@ class Game(pg.sprite.Sprite):
                     if self.pl.bomb_limit > len(bombGroup):  # limita as bombas
                         newBomb = Bomb(gameObjectGroup, bombGroup) 
                         newBomb.calcPos(self.pl.rect.center)
-                        newBomb.range = self.pl.bomb_limit
+                        newBomb.range = self.pl.explosion_range
                         self.pl.last_bomb = newBomb
                         self.pl.over_last_bomb = True
                     
@@ -53,3 +55,7 @@ class Game(pg.sprite.Sprite):
                 elif char == 4:
                     en = Enemy(enemyGroup)
                     en.rect.center = x, y
+    
+    def playMusic(self):
+        pg.mixer.music.load(PATH + "/sounds/ievan_polka.wav")
+        pg.mixer.music.play(-1)

@@ -1,7 +1,7 @@
 import pygame as pg
 from time import time as _time
 from .utils import menuGroup, mainMenu_img, bomberman_img, bomb_img
-from .utils import HEIGHT, WIDTH
+from .utils import HEIGHT, WIDTH, PATH, click, choose
 
 
 class Menu(pg.sprite.Sprite):
@@ -10,9 +10,12 @@ class Menu(pg.sprite.Sprite):
         self.image = pg.transform.scale(mainMenu_img, (HEIGHT, WIDTH))
         self.rect = self.image.get_rect()
         self.button = None
-       
+        self.volume = 0.8
+
         self.bomber = Bomberman(menuGroup)
         self.bomb = Bomb(menuGroup)
+
+        self.playMusic()
 
     def update(self):
         self.events()
@@ -23,7 +26,9 @@ class Menu(pg.sprite.Sprite):
                 exit()
             if event.type == pg.KEYDOWN:
                 if event.key == 13:
+                    choose.play()
                     if self.bomb.UVpos == 0:
+                        self.gm.playMusic()
                         self.gm.running = True
                     elif self.bomb.UVpos == 1:
                         pass
@@ -31,8 +36,15 @@ class Menu(pg.sprite.Sprite):
                         pass
                 elif event.key == pg.K_UP:
                     self.bomb.UVpos = (self.bomb.UVpos - 1) % 3
+                    click.play()
                 elif event.key == pg.K_DOWN:
                     self.bomb.UVpos = (self.bomb.UVpos + 1) % 3
+                    click.play()
+
+    def playMusic(self):
+        pg.mixer.music.load(PATH + "/sounds/samba_de_janeiro.wav")
+        pg.mixer.music.set_volume(self.volume)
+        pg.mixer.music.play(-1)
 
     def getGame(self, game):
         self.gm = game
@@ -43,7 +55,7 @@ class Bomberman(pg.sprite.Sprite):
         super().__init__(*groups)
         self.image = bomberman_img.subsurface([0, 0, 300, 300])
         self.image = pg.transform.scale(self.image, [225, 225])
-        self.rect = pg.rect.Rect([360, 200, 225, 225])
+        self.rect = pg.rect.Rect([320, 200, 225, 225])
 
     def update(self):
         aux = (pg.time.get_ticks() // 160) % 4

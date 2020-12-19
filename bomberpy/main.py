@@ -1,4 +1,4 @@
-# VERSION = 0.0.3.dev1
+# VERSION = 0.0.4.dev1
 
 import pygame as pg
 
@@ -17,9 +17,10 @@ pg.display.set_icon(icon)
 def run():
     gm = Game(gameGroup)
     mn = Menu(menuGroup)
-    mn.getGame(gm)  
+    mn.getGame(gm)
 
     clock = pg.time.Clock()
+
     while True:
         clock.tick(30) 
         if gm.running: 
