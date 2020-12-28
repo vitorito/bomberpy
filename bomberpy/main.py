@@ -8,30 +8,28 @@ display = pg.display.set_mode([850, 550])
 
 from .menu import Menu
 from .game import Game
-from .utils import icon, menuGroup, gameGroup
+from .utils import icon, menuGroup
 from .utils import gameObjectGroup, playerGroup, enemyGroup
 
 pg.display.set_caption("Bomberpy")
 pg.display.set_icon(icon)
-
+ 
 def run():
-    gm = Game(gameGroup)
     mn = Menu(menuGroup)
-    mn.getGame(gm)
+    gm = Game()
+    mn.get_game(gm)
 
     clock = pg.time.Clock()
-
     while True:
         clock.tick(30) 
-        if gm.running: 
-            gameObjectGroup.update()
-            gameGroup.update()
-            enemyGroup.update()
-            playerGroup.update()
-            gameGroup.draw(display)
-            gameObjectGroup.draw(display)
-            enemyGroup.draw(display)
-            playerGroup.draw(display)
+        if gm.dead:
+            gm.reset()
+            gm = Game()
+            mn.get_game(gm)
+            mn.playMusic()
+        elif gm.running: 
+            gm.update()
+            gm.draw(display)
         else:
             menuGroup.update()
             menuGroup.draw(display)

@@ -37,4 +37,7 @@ class Wall(pg.sprite.Sprite):
         bst = _choice(['add_bomb', 'add_explosion_range', 'add_speed'])
         booster = Booster(bst, gameObjectGroup)
         booster.rect.center = self.rect.center
-        
+    """    
+    def __del__(self):
+        print("muro morreu")
+    """

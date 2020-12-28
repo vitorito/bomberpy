@@ -6,5 +6,9 @@ class Block(pg.sprite.Sprite):
         super().__init__(*groups)
         self.image = pg.transform.scale(block_img, [50, 50])
         self.rect = pg.rect.Rect(0, 0 , 50, 50)
-
+    """
+    def __del__(self):
+        pass
+        print('bloco morreu')
+    """
         

@@ -57,7 +57,7 @@ class Player(pg.sprite.Sprite):
         self.image = pg.transform.scale(frame, [40, 40])
 
     def deathAnimation(self):
-        aux = ((pg.time.get_ticks() - self.death_time) // 170) % 10
+        aux = ((pg.time.get_ticks() - self.death_time) // 150)
         if aux < 9:
             img_rect = [self.deathUVmap[aux], 0, 16, 25]
             if aux > 3:
@@ -91,3 +91,7 @@ class Player(pg.sprite.Sprite):
         if explosion or enemy:
             self.dead = True
             self.death_time = pg.time.get_ticks()
+    """
+    def __del__(self):
+        print('morri')
+    """

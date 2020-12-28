@@ -1,7 +1,7 @@
 import pygame as pg
 from time import time
 from .explosion import Explosion
-from .utils import bomb_img, explosionGroup, gameObjectGroup, ignition, explosion_sound
+from .utils import bomb_img, explosionGroup, gameObjectGroup, explosion_sound
 
 
 class Bomb(pg.sprite.Sprite):
@@ -12,7 +12,6 @@ class Bomb(pg.sprite.Sprite):
         self.rect = pg.rect.Rect([0, 0, 40, 50])
         self.start_time = pg.time.get_ticks()
         self.range = 1
-        ignition.play()
 
     def update(self):
         self.timer = pg.time.get_ticks() - self.start_time
@@ -35,9 +34,8 @@ class Bomb(pg.sprite.Sprite):
         self.kill()
         exp.generateExplosion()
         
-        
     def calcPos(self, pos):
         x = (pos[0] // 50) * 50 + 25
         y = (pos[1] // 50) * 50 + 25
         self.rect.center = x, y
-
+        
