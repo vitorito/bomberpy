@@ -17,21 +17,18 @@ class Game(object):
         self.image = pg.transform.scale(background_img, (HEIGHT, WIDTH)).convert()
         self.running = False
         self.paused = False
-        self.game_over = False
         self.dead = False
 
         self.restart()
 
     def update(self):
-        if not self.game_over and len(playerGroup) == 0:
-            self.game_over = True
-            pg.mixer.music.stop()
-            pg.time.wait(500)
         if self.paused:
             self.pm.update()
         else:
-            if self.game_over:
+            if len(playerGroup) == 0:
                 self.go.update()
+            elif len(enemyGroup) == 0:
+                self.victory.update()
             else:
                 self.events()
             gameObjectGroup.update()
@@ -45,8 +42,10 @@ class Game(object):
         playerGroup.draw(display)
         if self.paused:
             self.pm.draw(display)
-        elif self.game_over:
+        elif len(playerGroup) == 0:
             self.go.draw(display)
+        elif len(enemyGroup) == 0:
+            self.victory.draw(display)
 
     def events(self):
         for event in pg.event.get(): 
@@ -55,7 +54,6 @@ class Game(object):
             if event.type == pg.KEYDOWN: 
                 if event.key == pg.K_ESCAPE:
                     self.paused = True
-                    pg.mixer.music.pause()
                 if event.key == pg.K_SPACE and not pg.sprite.spritecollide(self.pl, bombGroup, False): 
                     if self.pl.bomb_limit > len(bombGroup):  # limita as bombas
                         newBomb = Bomb(gameObjectGroup, bombGroup) 
@@ -87,7 +85,7 @@ class Game(object):
         pg.mixer.music.play(-1)
 
     def reset(self):
-        del self.pl, self.pm, self.go
+        del self.pl, self.pm, self.go, self.victory
         playerGroup.empty()
         gameObjectGroup.empty()
         enemyGroup.empty()
@@ -98,6 +96,7 @@ class Game(object):
         self.pl = Player(playerGroup)
         self.pm = PauseMenu(self)
         self.go = GameOver(self)
+        self.victory = Victory(self)
         self.generateMap()
 
     def __del__(self):
@@ -111,12 +110,15 @@ class PauseMenu(object):
         self.buttons = pause_buttons
         self.gm = game
         self.paused = False
+        self.wait  = True
 
         self.bomb = MenuBomb()
         self.bomb.original_img = white_bomb_img
         self.bomb.UVmap = [(232, 92), (232, 147), (300, 206), (141, 263)]
 
     def update(self):
+        if pg.mixer.music.get_busy():
+            pg.mixer.music.pause()
         self.events()
         self.bomb.update()
 
@@ -137,6 +139,7 @@ class PauseMenu(object):
                     if self.bomb.UVpos == 0:
                         self.resume()
                     elif self.bomb.UVpos == 1:
+                        self.gm.paused = False
                         self.restart()
                     elif self.bomb.UVpos == 2:
                         self.back_to_menu()
@@ -161,8 +164,10 @@ class PauseMenu(object):
     def back_to_menu(self):
         self.gm.running = False
         self.gm.dead  = True
-        
-
+    """
+    def __del__(self):
+        print(self.__class__)
+    """
 class GameOver(PauseMenu):
     def __init__(self, game):
         super().__init__(game)
@@ -178,7 +183,6 @@ class GameOver(PauseMenu):
                     exit()
                 elif event.key == pg.K_RETURN:
                     if self.bomb.UVpos == 0:
-                        self.gm.game_over = False
                         self.restart()
                     elif self.bomb.UVpos == 1:
                         self.back_to_menu()
@@ -188,3 +192,9 @@ class GameOver(PauseMenu):
                     self.bomb.UVpos = (self.bomb.UVpos - 1) % 3
                 elif event.key == pg.K_DOWN:
                     self.bomb.UVpos = (self.bomb.UVpos + 1) % 3
+
+
+class Victory(GameOver):
+    def __init__(self, game):
+        super().__init__(game)
+        self.buttons = victory_img
