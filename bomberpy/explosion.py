@@ -49,7 +49,7 @@ class Explosion(pg.sprite.Sprite):
                 wall[0].start_time = time()
                 wall[0].dead = True
             if bomb:
-                bomb[0].explosion()
+                bomb[0].explosion(sound=False)
             self.stopDirection(direction)
             exp.kill()
 

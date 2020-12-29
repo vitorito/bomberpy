@@ -9,7 +9,6 @@ class Booster(pg.sprite.Sprite):
         self.start_time = _time()
         self.changeCharacteristics()
         
-
     def update(self):
         self.timer = _time() - self.start_time
 
@@ -22,18 +21,13 @@ class Booster(pg.sprite.Sprite):
             elif self.booster_type == 'add_explosion_range':
                 player_collide[0].explosion_range += 1
             elif self.booster_type == 'add_speed':
-                player_collide[0].vel += 1
+                player_collide[0].vel += 0.5
             self.kill()
-        elif explosion_collide or self.timer >= 5:
+        elif explosion_collide or self.timer >= 10:
             self.kill()
 
     def changeCharacteristics(self):
-        if self.booster_type == 'add_bomb':
-            frame = boosters_img.subsurface([0, 0, 16, 16])
-        elif self.booster_type == 'add_explosion_range':
-            frame = boosters_img.subsurface([16, 0, 16, 16])
-        elif self.booster_type == 'add_speed':
-            frame = boosters_img.subsurface([32, 0, 16, 16])
-
+        types = {'add_bomb': 0, 'add_explosion_range': 16, 'add_speed': 32}
+        frame = boosters_img.subsurface([types[self.booster_type], 0, 16, 16])
         self.image = pg.transform.scale(frame, [40, 40])
         self.rect = self.image.get_rect()
