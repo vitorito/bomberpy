@@ -91,7 +91,3 @@ class Player(pg.sprite.Sprite):
         if explosion or enemy:
             self.dead = True
             self.death_time = pg.time.get_ticks()
-    """
-    def __del__(self):
-        print('morri')
-    """

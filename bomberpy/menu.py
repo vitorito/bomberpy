@@ -57,11 +57,7 @@ class Bomberman(pg.sprite.Sprite):
         aux = (pg.time.get_ticks() // 160) % 4
         frame = bomberman_img.subsurface([aux * 300, 0, 300, 300])
         self.image = pg.transform.scale(frame, [225, 225])
-    """
-    def __del__(self):
-        pass
-        print('bomber morreu')
-    """
+
 
 class MenuBomb(pg.sprite.Sprite):
     def __init__(self, *groups):
@@ -81,9 +77,3 @@ class MenuBomb(pg.sprite.Sprite):
         aux = (pg.time.get_ticks() // 150) % 4
         frame = self.original_img.subsurface([aux * 80, 0, 80, 120])
         self.image = pg.transform.scale(frame, [45, 60])
-    """    
-    def __del__(self):
-        pass
-        print("bomb morreu")
-    """
-

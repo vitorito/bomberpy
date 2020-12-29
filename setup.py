@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='bomberpy',
-    version="0.0.4.dev1",
+    version="0.0.4",
     description='O clássico Bomberman feito em python.',
     long_description=readme,
     long_description_content_type="text/markdown",

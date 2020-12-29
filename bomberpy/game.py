@@ -99,9 +99,6 @@ class Game(object):
         self.victory = Victory(self)
         self.generateMap()
 
-    def __del__(self):
-        print("jogo morreu")
-
 
 class PauseMenu(object):
     def __init__(self, game):
@@ -164,10 +161,8 @@ class PauseMenu(object):
     def back_to_menu(self):
         self.gm.running = False
         self.gm.dead  = True
-    """
-    def __del__(self):
-        print(self.__class__)
-    """
+
+
 class GameOver(PauseMenu):
     def __init__(self, game):
         super().__init__(game)
