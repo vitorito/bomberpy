@@ -1,7 +1,7 @@
 import pygame as pg
 from time import time as _time
 from .utils import menuGroup, mainMenu_img, bomberman_img, bomb_img, pause_buttons
-from .utils import HEIGHT, WIDTH, PATH, click, choose
+from .utils import HEIGHT, WIDTH, PATH
 
 
 class Menu(pg.sprite.Sprite):

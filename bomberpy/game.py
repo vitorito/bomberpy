@@ -16,15 +16,24 @@ class Game(object):
     def __init__(self):
         self.image = pg.transform.scale(background_img, (HEIGHT, WIDTH)).convert()
         self.running = False
+        self.paused = False
+        self.game_over = False
         self.dead = False
 
         self.restart()
 
     def update(self):
-        if self.pm.paused:
+        if not self.game_over and len(playerGroup) == 0:
+            self.game_over = True
+            pg.mixer.music.stop()
+            pg.time.wait(500)
+        if self.paused:
             self.pm.update()
         else:
-            self.events()
+            if self.game_over:
+                self.go.update()
+            else:
+                self.events()
             gameObjectGroup.update()
             enemyGroup.update()
             playerGroup.update()
@@ -34,8 +43,10 @@ class Game(object):
         gameObjectGroup.draw(display)
         enemyGroup.draw(display)
         playerGroup.draw(display)
-        if self.pm.paused:
+        if self.paused:
             self.pm.draw(display)
+        elif self.game_over:
+            self.go.draw(display)
 
     def events(self):
         for event in pg.event.get(): 
@@ -43,7 +54,7 @@ class Game(object):
                 exit()
             if event.type == pg.KEYDOWN: 
                 if event.key == pg.K_ESCAPE:
-                    self.pm.paused = True
+                    self.paused = True
                     pg.mixer.music.pause()
                 if event.key == pg.K_SPACE and not pg.sprite.spritecollide(self.pl, bombGroup, False): 
                     if self.pl.bomb_limit > len(bombGroup):  # limita as bombas
@@ -76,8 +87,7 @@ class Game(object):
         pg.mixer.music.play(-1)
 
     def reset(self):
-        del self.pl
-        del self.pm
+        del self.pl, self.pm, self.go
         playerGroup.empty()
         gameObjectGroup.empty()
         enemyGroup.empty()
@@ -87,6 +97,7 @@ class Game(object):
     def restart(self):
         self.pl = Player(playerGroup)
         self.pm = PauseMenu(self)
+        self.go = GameOver(self)
         self.generateMap()
 
     def __del__(self):
@@ -94,17 +105,16 @@ class Game(object):
 
 
 class PauseMenu(object):
-    def __init__(self, game, *groups):
-        super().__init__(*groups)
+    def __init__(self, game):
         self.image = pg.surface.Surface([HEIGHT, WIDTH])
-        self.image.set_alpha(240)
-        self.rect = self.image.get_rect()
+        self.image.set_alpha(230)
+        self.buttons = pause_buttons
         self.gm = game
         self.paused = False
 
         self.bomb = MenuBomb()
         self.bomb.original_img = white_bomb_img
-        self.bomb.UVmap = [(230, 92), (232, 147), (300, 206), (141, 263)]
+        self.bomb.UVmap = [(232, 92), (232, 147), (300, 206), (141, 263)]
 
     def update(self):
         self.events()
@@ -112,7 +122,7 @@ class PauseMenu(object):
 
     def draw(self, display):
         display.blit(self.image, [0, 0])
-        display.blit(pause_buttons, [40, 25])
+        display.blit(self.buttons, [40, 25])
         display.blit(self.bomb.image, self.bomb.UVmap[self.bomb.UVpos])
 
     def events(self):
@@ -127,7 +137,7 @@ class PauseMenu(object):
                     if self.bomb.UVpos == 0:
                         self.resume()
                     elif self.bomb.UVpos == 1:
-                        self.restarter()
+                        self.restart()
                     elif self.bomb.UVpos == 2:
                         self.back_to_menu()
                     elif self.bomb.UVpos == 3:
@@ -138,18 +148,43 @@ class PauseMenu(object):
                     self.bomb.UVpos = (self.bomb.UVpos + 1) % 4
 
     def resume(self):
-        self.paused = False
-        self.bomb.UVpos = 0
+        self.gm.paused = False
         pg.time.wait(100)
         pg.mixer.music.unpause()
 
-    def restarter(self):
+    def restart(self):
         self.gm.reset()
         self.gm.restart()
         pg.mixer.music.play(-1)
-        pg.time.wait(100)
+        pg.time.wait(200)
     
     def back_to_menu(self):
         self.gm.running = False
         self.gm.dead  = True
         
+
+class GameOver(PauseMenu):
+    def __init__(self, game):
+        super().__init__(game)
+        self.bomb.UVmap = [(232, 92), (300, 147), (141, 206)]
+        self.buttons = gameOver_img
+
+    def events(self):
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                exit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    exit()
+                elif event.key == pg.K_RETURN:
+                    if self.bomb.UVpos == 0:
+                        self.gm.game_over = False
+                        self.restart()
+                    elif self.bomb.UVpos == 1:
+                        self.back_to_menu()
+                    elif self.bomb.UVpos == 2:
+                        exit()
+                elif event.key == pg.K_UP:
+                    self.bomb.UVpos = (self.bomb.UVpos - 1) % 3
+                elif event.key == pg.K_DOWN:
+                    self.bomb.UVpos = (self.bomb.UVpos + 1) % 3
